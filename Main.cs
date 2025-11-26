@@ -14,30 +14,52 @@ public partial class Main : Node2D
     {
         var tmlChildren = tileMapLayer.GetChildren();
 
-        // Sort children by their tilemap coordinates
-        var sortedChildren = new System.Collections.Generic.List<Node>(tmlChildren);
-        sortedChildren.Sort(
-            (a, b) =>
-            {
-                var nodeA = a as Node2D;
-                var nodeB = b as Node2D;
-                var coordA = tileMapLayer.LocalToMap(nodeA.Position);
-                var coordB = tileMapLayer.LocalToMap(nodeB.Position);
-
-                // Sort by Y first, then X (reversed)
-                int yCompare = coordB.Y.CompareTo(coordA.Y);
-                return yCompare != 0 ? yCompare : coordB.X.CompareTo(coordA.X);
-            }
-        );
-
-        var delay = 0.0f;
-        foreach (var child in sortedChildren)
+        // Group children by Y coordinate
+        var lineGroups = new System.Collections.Generic.Dictionary<
+            int,
+            System.Collections.Generic.List<Node>
+        >();
+        foreach (var child in tmlChildren)
         {
-            if (child is Tile tile)
+            var nodeChild = child as Node2D;
+            var coord = tileMapLayer.LocalToMap(nodeChild.Position);
+
+            if (!lineGroups.ContainsKey(coord.Y))
             {
-                GetTree().CreateTimer(delay).Timeout += () => tile.PlayAnimation();
-                delay += 0.1f;
+                lineGroups[coord.Y] = new System.Collections.Generic.List<Node>();
             }
+            lineGroups[coord.Y].Add(child);
+        }
+
+        // Sort lines by Y coordinate (descending)
+        var sortedLines = new System.Collections.Generic.List<int>(lineGroups.Keys);
+        sortedLines.Sort((a, b) => b.CompareTo(a));
+
+        // Play animations for each line with delay between lines
+        var lineDelay = 0.0f;
+        foreach (var y in sortedLines)
+        {
+            var line = lineGroups[y];
+            // Sort tiles in line by X coordinate (descending)
+            line.Sort(
+                (a, b) =>
+                {
+                    var nodeA = a as Node2D;
+                    var nodeB = b as Node2D;
+                    var coordA = tileMapLayer.LocalToMap(nodeA.Position);
+                    var coordB = tileMapLayer.LocalToMap(nodeB.Position);
+                    return coordB.X.CompareTo(coordA.X);
+                }
+            );
+
+            foreach (var child in line)
+            {
+                if (child is Tile tile)
+                {
+                    GetTree().CreateTimer(lineDelay).Timeout += () => tile.PlayAnimation();
+                }
+            }
+            lineDelay += 0.1f;
         }
     }
 }
