@@ -1,3 +1,24 @@
-[gd_scene format=3 uid="uid://drgmmei3epep"]
+[gd_scene load_steps=5 format=4 uid="uid://drgmmei3epep"]
+
+[ext_resource type="PackedScene" uid="uid://7fahape1xt7s" path="res://Tile.tscn" id="1_glv2v"]
+[ext_resource type="Script" uid="uid://4reagwyg5mde" path="res://Main.cs" id="1_uu6xs"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_uu6xs"]
+resource_name = "Default"
+scenes/1/scene = ExtResource("1_glv2v")
+
+[sub_resource type="TileSet" id="TileSet_r0du0"]
+tile_shape = 1
+tile_layout = 5
+tile_size = Vector2i(128, 64)
+sources/1 = SubResource("TileSetScenesCollectionSource_uu6xs")
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_uu6xs")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+y_sort_enabled = true
+tile_map_data = PackedByteArray("AAD//wAAAQAAAAAAAQAAAAAAAQAAAAAAAQAAAP//AQAAAAAAAQD/////AQAAAAAAAQABAP//AQAAAAAAAQABAAAAAQAAAAAAAQACAP//AQAAAAAAAQACAAAAAQAAAAAAAQADAAAAAQAAAAAAAQADAP//AQAAAAAAAQADAP7/AQAAAAAAAQACAP7/AQAAAAAAAQABAP7/AQAAAAAAAQAAAP7/AQAAAAAAAQD///7/AQAAAAAAAQD///3/AQAAAAAAAQAAAP3/AQAAAAAAAQABAP3/AQAAAAAAAQACAP3/AQAAAAAAAQADAP3/AQAAAAAAAQADAPz/AQAAAAAAAQACAPz/AQAAAAAAAQABAPz/AQAAAAAAAQAAAPz/AQAAAAAAAQD///z/AQAAAAAAAQD///v/AQAAAAAAAQAAAPv/AQAAAAAAAQABAPv/AQAAAAAAAQACAPv/AQAAAAAAAQADAPv/AQAAAAAAAQA=")
+tile_set = SubResource("TileSet_r0du0")
+
+[node name="Camera2D" type="Camera2D" parent="."]

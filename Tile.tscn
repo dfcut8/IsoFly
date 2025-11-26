@@ -1,3 +1,14 @@
-[gd_scene format=3 uid="uid://7fahape1xt7s"]
+[gd_scene load_steps=3 format=3 uid="uid://7fahape1xt7s"]
 
-[node name="Tile" type="Node2D"]
+[ext_resource type="Texture2D" uid="uid://cubpafc6prume" path="res://Assets/Textures/TileSets/BasicGroundTiles.png" id="1_j13wd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_je3b2"]
+atlas = ExtResource("1_j13wd")
+region = Rect2(0, 0, 128, 128)
+
+[node name="GrassTile" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
+texture = SubResource("AtlasTexture_je3b2")
+offset = Vector2(0, 32)
