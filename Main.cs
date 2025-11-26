@@ -59,7 +59,7 @@ public partial class Main : Node2D
                     GetTree().CreateTimer(lineDelay).Timeout += () => tile.PlayAnimation();
                 }
             }
-            lineDelay += 0.1f;
+            lineDelay += 0.05f;
         }
     }
 }
