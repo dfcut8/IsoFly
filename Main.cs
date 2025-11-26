@@ -56,18 +56,6 @@ public partial class Main : Node2D
             {
                 if (child is Tile tile)
                 {
-                    // Check if tile is visible in viewport
-                    var camera = GetViewport().GetCamera2D();
-                    if (camera != null)
-                    {
-                        var cameraRect = camera.GetViewport().GetVisibleRect();
-                        var tileGlobalPos = tile.GlobalPosition;
-                        if (!cameraRect.HasPoint(tileGlobalPos))
-                        {
-                            continue;
-                        }
-                    }
-
                     GetTree().CreateTimer(lineDelay).Timeout += () => tile.PlayAnimation();
                 }
             }
