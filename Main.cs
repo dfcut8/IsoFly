@@ -12,57 +12,50 @@ public partial class Main : Node2D
     private Color coordinateColor = Colors.White;
 
     [Export]
-    private int coordinateFontSize = 16;
+    private int coordinateFontSize = 14;
+
+    [Export]
+    private float fallDuration = 2.0f;
+
+    [Export]
+    private float fallHeight = 500.0f;
 
     private Font coordinateFont;
-    private Vector2 mousePos;
 
     public override void _Ready()
     {
         // Load default font - will use system font
         coordinateFont = new SystemFont();
+
+        // Get all tiles in the tilemap and print their names
+        GetTileScenes();
     }
 
-    public override void _Input(InputEvent @event)
+    private void GetTileScenes()
     {
-        if (@event is InputEventMouseMotion mouseMotion)
-        {
-            mousePos = mouseMotion.Position;
-            QueueRedraw();
-        }
-    }
-
-    public override void _Draw()
-    {
-        if (!showCoordinateOverlay || tileMapLayer == null)
+        if (tileMapLayer == null || tileMapLayer.TileSet == null)
             return;
 
-        // Get the tile coordinates at the mouse position
-        Vector2I tileCoords = tileMapLayer.LocalToMap(GetLocalMousePosition());
+        // Get all used cells
+        var usedCells = tileMapLayer.GetUsedCells();
+        GD.Print($"Total tiles in tilemap: {usedCells.Count}");
 
-        // Draw the coordinate text at the mouse position with offset
-        string coordText = $"({tileCoords.X}, {tileCoords.Y})";
-        Vector2 drawPos = mousePos + new Vector2(10, -20);
+        foreach (Vector2I cellCoords in usedCells)
+        {
+            // Get the source ID for this cell
+            int sourceId = tileMapLayer.GetCellSourceId(cellCoords);
 
-        // Draw background rectangle for better readability
-        Vector2 textSize = coordinateFont.GetStringSize(
-            coordText,
-            HorizontalAlignment.Left,
-            -1,
-            coordinateFontSize
-        );
-        Rect2 bgRect = new Rect2(drawPos - new Vector2(5, 5), textSize + new Vector2(10, 10));
-        DrawRect(bgRect, new Color(0, 0, 0, 0.7f));
+            // Get the source from the tileset
+            TileSetSource source = tileMapLayer.TileSet.GetSource(sourceId);
 
-        // Draw the coordinate text
-        DrawString(
-            coordinateFont,
-            drawPos,
-            coordText,
-            HorizontalAlignment.Left,
-            -1,
-            coordinateFontSize,
-            coordinateColor
-        );
+            // Check if it's a TileSetScenesCollectionSource (which contains scenes)
+            // if (source is TileSetScenesCollectionSource sceneSource)
+            // {
+            //     int altId = tileMapLayer.GetCellAlternativeTile(cellCoords);
+            //     // The assigned PackedScene.
+            //     PackedScene scene = sceneSource.GetSceneTileScene(altId);
+            //     GD.Print(scene);
+            // }
+        }
     }
 }

@@ -13,8 +13,9 @@ tile_layout = 5
 tile_size = Vector2i(128, 64)
 sources/1 = SubResource("TileSetScenesCollectionSource_uu6xs")
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("tileMapLayer")]
 script = ExtResource("1_uu6xs")
+tileMapLayer = NodePath("TileMapLayer")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 y_sort_enabled = true
